@@ -40,10 +40,15 @@ INSTALLED_APPS = [
     'blog',
     'cart',
     'Authenticate',
+    'rest_framework',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 # Custom User Model
 AUTH_USER_MODEL = 'Authenticate.CustomUser'
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

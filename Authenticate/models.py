@@ -73,3 +73,37 @@ class CustomUser(AbstractUser):
         if self.website:
             links['website'] = self.website
         return links
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile')
+    bio = models.TextField(max_length=500, blank=True, verbose_name="بیوگرافی")
+    avatar = models.ImageField(upload_to='profile_avatars/', blank=True, null=True, verbose_name="تصویر پروفایل")
+    phone_number = models.CharField(max_length=17, blank=True, verbose_name="شماره تلفن")
+    job_title = models.CharField(max_length=100, blank=True, verbose_name="عنوان شغلی")
+    company = models.CharField(max_length=100, blank=True, verbose_name="شرکت")
+    location = models.CharField(max_length=100, blank=True, verbose_name="موقعیت جغرافیایی")
+    website = models.URLField(blank=True, verbose_name="وب‌سایت")
+    github = models.URLField(blank=True, verbose_name="گیت‌هاب")
+    phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$',
+        message="شماره تلفن باید در فرمت صحیح وارد شود."
+    )
+    phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, verbose_name="تلفن")
+    
+    # متا دیتا
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ بروزرسانی")
+
+    class Meta:
+        verbose_name = "پروفایل"
+        verbose_name_plural = "پروفایل‌ها"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"پروفایل {self.user.username}"
+
+    def get_absolute_url(self):
+        return f"/profile/{self.user.username}/"
+
+    
